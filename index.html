@@ -2024,10 +2024,59 @@
     const suggestionButtons = document.querySelectorAll('.ai-suggestions button');
 
     function formatAIResponse(text) {
-      if (window.marked && window.DOMPurify) {
-        return DOMPurify.sanitize(marked.parse(text));
+      const mathParts = [];
+      const slash = String.fromCharCode(92);
+      const delimiters = [
+        [slash + '[', slash + ']'],
+        [slash + '(', slash + ')'],
+        ['$$', '$$']
+      ];
+
+      function protectOne(source, startDelim, endDelim) {
+        let result = '';
+        let position = 0;
+
+        while (position < source.length) {
+          const start = source.indexOf(startDelim, position);
+          if (start === -1) {
+            result += source.slice(position);
+            break;
+          }
+
+          const end = source.indexOf(endDelim, start + startDelim.length);
+          if (end === -1) {
+            result += source.slice(position);
+            break;
+          }
+
+          result += source.slice(position, start);
+          const math = source.slice(start, end + endDelim.length);
+          const token = `@@MATH_${mathParts.length}@@`;
+          mathParts.push(math);
+          result += token;
+          position = end + endDelim.length;
+        }
+
+        return result;
       }
-      return text;
+
+      let protectedText = text;
+      delimiters.forEach(function(pair) {
+        protectedText = protectOne(protectedText, pair[0], pair[1]);
+      });
+
+      let html;
+      if (window.marked && window.DOMPurify) {
+        html = DOMPurify.sanitize(marked.parse(protectedText));
+      } else {
+        html = protectedText;
+      }
+
+      mathParts.forEach(function(math, index) {
+        html = html.split(`@@MATH_${index}@@`).join(math);
+      });
+
+      return html;
     }
 
     function renderMathInside(element) {
