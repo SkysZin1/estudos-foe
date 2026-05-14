@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FOE — Central de Estudos</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     :root {
@@ -636,7 +638,51 @@
       border-radius: 18px;
       font-size: .96rem;
       line-height: 1.55;
+      white-space: normal;
+    }
+
+    .ai-message p {
+      margin: 0 0 10px;
+    }
+
+    .ai-message p:last-child {
+      margin-bottom: 0;
+    }
+
+    .ai-message strong {
+      color: #0f172a;
+      font-weight: 900;
+    }
+
+    .ai-message h3 {
+      margin: 12px 0 8px;
+      font-size: 1.05rem;
+      color: #0f172a;
+    }
+
+    .ai-message ul,
+    .ai-message ol {
+      margin: 8px 0 10px;
+      padding-left: 20px;
+    }
+
+    .ai-message code,
+    .ai-formula {
+      display: inline-block;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #1e1b4b;
+      border-radius: 10px;
+      padding: 3px 7px;
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+    }
+
+    .ai-message pre.ai-formula {
+      display: block;
       white-space: pre-wrap;
+      margin: 10px 0;
+      padding: 10px 12px;
     }
 
     .ai-message.user {
@@ -974,6 +1020,7 @@
         <a href="#conteudo">Resumo do conteúdo</a>
         <a href="#formulas">Resumo das fórmulas</a>
         <a href="#prioridades">Prioridades</a>
+        <a href="#unidades">Unidades</a>
         <a href="#erros">Erros comuns</a>
         <a href="#gabarito">Gabarito rápido</a>
         <a href="#dicas">Dicas</a>
@@ -1560,6 +1607,49 @@
       </div>
     </section>
 
+
+    <section id="unidades">
+      <div class="section-header">
+        <span class="kicker">Conversão de unidades</span>
+        <h2>Prefixos e unidades que mais aparecem</h2>
+        <p>Antes de substituir valores nas fórmulas, converta tudo para o Sistema Internacional. Muitos erros em FOE acontecem por esquecer micro, mili, quilo ou centímetros.</p>
+      </div>
+
+      <div class="topic cyan">
+        <div class="topic-title"><span class="topic-number">SI</span><h3>Prefixos mais importantes</h3></div>
+        <div class="grid">
+          <div class="card cyan"><h4>Quilo</h4><div class="formula">k = 10³</div><p>Exemplo: 2 kΩ = 2 × 10³ Ω = 2000 Ω.</p></div>
+          <div class="card cyan"><h4>Mili</h4><div class="formula">m = 10⁻³</div><p>Exemplo: 5 mA = 5 × 10⁻³ A.</p></div>
+          <div class="card cyan"><h4>Micro</h4><div class="formula">μ = 10⁻⁶</div><p>Exemplo: 4 μC = 4 × 10⁻⁶ C.</p></div>
+          <div class="card cyan"><h4>Nano</h4><div class="formula">n = 10⁻⁹</div><p>Exemplo: 10 nF = 10 × 10⁻⁹ F.</p></div>
+          <div class="card cyan"><h4>Pico</h4><div class="formula">p = 10⁻¹²</div><p>Exemplo: 17,7 pF = 17,7 × 10⁻¹² F.</p></div>
+          <div class="card cyan"><h4>Mega</h4><div class="formula">M = 10⁶</div><p>Exemplo: 3 MΩ = 3 × 10⁶ Ω.</p></div>
+        </div>
+      </div>
+
+      <div class="topic green">
+        <div class="topic-title"><span class="topic-number">↔</span><h3>Conversões comuns em exercícios</h3></div>
+        <div class="grid">
+          <div class="card green"><h4>Carga elétrica</h4><div class="formula">1 μC = 10⁻⁶ C</div><div class="formula">1 nC = 10⁻⁹ C</div><p>Use coulomb nas fórmulas de força, potencial e campo.</p></div>
+          <div class="card green"><h4>Capacitância</h4><div class="formula">1 μF = 10⁻⁶ F</div><div class="formula">1 nF = 10⁻⁹ F</div><div class="formula">1 pF = 10⁻¹² F</div><p>Em circuito RC, sempre use farad.</p></div>
+          <div class="card green"><h4>Resistência</h4><div class="formula">1 kΩ = 10³ Ω</div><div class="formula">1 MΩ = 10⁶ Ω</div><p>Em Lei de Ohm e RC, use ohm.</p></div>
+          <div class="card green"><h4>Distância</h4><div class="formula">1 cm = 10⁻² m</div><div class="formula">1 mm = 10⁻³ m</div><p>Em campo, potencial e força magnética, use metro.</p></div>
+          <div class="card green"><h4>Tempo</h4><div class="formula">1 ms = 10⁻³ s</div><div class="formula">1 μs = 10⁻⁶ s</div><p>Em circuito RC, a constante de tempo τ fica em segundos.</p></div>
+          <div class="card green"><h4>Campo magnético</h4><div class="formula">1 mT = 10⁻³ T</div><div class="formula">1 μT = 10⁻⁶ T</div><p>Nas fórmulas de força magnética, use tesla.</p></div>
+        </div>
+      </div>
+
+      <div class="topic orange">
+        <div class="topic-title"><span class="topic-number">!</span><h3>Macete rápido</h3></div>
+        <div class="grid">
+          <div class="card orange wide">
+            <h4>Como converter sem se perder</h4>
+            <p>Substitua o prefixo pela potência de 10. Por exemplo, se a questão diz <strong>q = 2 μC</strong>, escreva <strong>q = 2 × 10⁻⁶ C</strong>. Se diz <strong>R = 2 kΩ</strong>, escreva <strong>R = 2 × 10³ Ω</strong>. Só depois coloque os valores na fórmula.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="formulas">
       <div class="section-header">
         <span class="kicker">Resumo das fórmulas</span>
@@ -1933,11 +2023,33 @@
     const askButton = document.getElementById('askButton');
     const suggestionButtons = document.querySelectorAll('.ai-suggestions button');
 
+    function formatAIResponse(text) {
+      if (window.marked && window.DOMPurify) {
+        return DOMPurify.sanitize(marked.parse(text));
+      }
+      return text;
+    }
+
+    function renderMathInside(element) {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([element]).catch(function(error) {
+          console.error('Erro ao renderizar fórmula:', error);
+        });
+      }
+    }
+
     function addMessage(text, type) {
       const message = document.createElement('div');
       message.className = `ai-message ${type}`;
-      message.textContent = text;
+
+      if (type === 'bot') {
+        message.innerHTML = formatAIResponse(text);
+      } else {
+        message.textContent = text;
+      }
+
       chatMessages.appendChild(message);
+      renderMathInside(message);
       chatMessages.scrollTop = chatMessages.scrollHeight;
       return message;
     }
@@ -1965,9 +2077,10 @@
         }
 
         const data = await response.json();
-        loadingMessage.textContent = data.answer || 'Não recebi uma resposta válida da IA.';
+        loadingMessage.innerHTML = formatAIResponse(data.answer || 'Não recebi uma resposta válida da IA.');
+        renderMathInside(loadingMessage);
       } catch (error) {
-        loadingMessage.textContent = 'Ainda falta conectar o backend seguro da IA. Depois de criar a rota /api/chat no Vercel, esta área funcionará normalmente.';
+        loadingMessage.innerHTML = formatAIResponse('Ainda falta conectar o backend seguro da IA. Depois de criar a rota /api/chat no Vercel, esta área funcionará normalmente.');
         console.error(error);
       } finally {
         askButton.disabled = false;
